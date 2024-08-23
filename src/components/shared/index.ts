@@ -7,3 +7,4 @@ export { SortingBar } from "./sortingBar";
 export { Filters } from "./filters";
 export { FiltrationCheckbox } from "./filtrationCheckbox";
 export { DoubleSlider } from "./doubleSlider";
+export { CheckboxGroup } from "./checkboxGroup";
