@@ -1,114 +1,135 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Title } from "./title";
-import { FiltrationCheckbox } from "./filtrationCheckbox";
 import { Input } from "../ui";
 import { DoubleSlider } from "./doubleSlider";
 import { CheckboxGroup } from "./checkboxGroup";
+import { useFilterIngredients } from "../../../hooks/useFilterIngredients";
+import { useSet } from "react-use";
+import qs from "qs";
+import { useRouter } from "next/navigation";
 
 type Props = {
   className?: string;
 };
 
+type PriceProps = {
+  priceFrom?: number;
+  priceTo?: number;
+};
+
 export const Filters: React.FC<Props> = ({ className }) => {
+  const router = useRouter();
+
+  const { ingredients, loading, onAddId, selectedIngredietns } =
+    useFilterIngredients();
+
+  const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>([]));
+  const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(
+    new Set<string>([])
+  );
+
+  const [prices, setPrice] = useState<PriceProps>({});
+
+  const items = ingredients.map((item) => ({
+    text: item.name,
+    value: String(item.id),
+  }));
+
+  useEffect(() => {
+    const filters = {
+      ...prices,
+      pizzaTypes: Array.from(pizzaTypes),
+      sizes: Array.from(sizes),
+      ingredients: Array.from(selectedIngredietns),
+    };
+
+    const query = qs.stringify(filters, {
+      arrayFormat: "comma",
+    });
+
+    router.push(`?${query}`);
+  }, [prices, pizzaTypes, sizes, selectedIngredietns, router]);
+
+  const updatePrice = (name: keyof PriceProps, value: number) => {
+    setPrice({
+      ...prices,
+      [name]: value,
+    });
+  };
+
   return (
     <div className={className}>
       <Title text="Filters" size="sm" className="mb-5 font-bold" />
 
-      <div className="flex flex-col gap-4">
-        <FiltrationCheckbox text="Customizable" value="1" />
-        <FiltrationCheckbox text="New Arrivals" value="2" />
-      </div>
+      <CheckboxGroup
+        title="Dough type"
+        name="pizzaTypes"
+        className="mb-5"
+        items={[
+          { text: "Thin", value: "1" },
+          { text: "Traditional", value: "2" },
+        ]}
+        onClickCheckbox={togglePizzaTypes}
+        selected={pizzaTypes}
+      />
+
+      <CheckboxGroup
+        title="Sizes"
+        name="sizes"
+        className="mb-5"
+        items={[
+          { text: "20 sm", value: "20" },
+          { text: "30 sm", value: "30" },
+          { text: "40 sm", value: "40" },
+        ]}
+        onClickCheckbox={toggleSizes}
+        selected={sizes}
+      />
 
       <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
         <p className="font-bold mb-3">Price Range:</p>
         <div className="flex gap-3 mb-5">
-          <Input type="number" placeholder="0" min={0} max={1000} />
-          <Input type="number" min={100} max={1000} placeholder="1000" />
+          <Input
+            type="number"
+            placeholder="0"
+            min={0}
+            max={100}
+            value={String(prices.priceFrom)}
+            onChange={(e) => updatePrice("priceFrom", Number(e.target.value))}
+          />
+          <Input
+            type="number"
+            placeholder="100"
+            min={0}
+            max={100}
+            value={String(prices.priceTo)}
+            onChange={(e) => updatePrice("priceTo", Number(e.target.value))}
+          />
         </div>
 
-        <DoubleSlider min={0} max={1000} step={10} value={[0, 1000]} />
+        <DoubleSlider
+          min={0}
+          max={100}
+          step={1}
+          value={[prices.priceFrom || 0, prices.priceTo || 100]}
+          onValueChange={([priceFrom, priceTo]) =>
+            setPrice({ priceFrom, priceTo })
+          }
+        />
       </div>
 
       <CheckboxGroup
         title="Ingredients"
+        name="ingredients"
         className="mt-5"
         limit={5}
-        defaultItems={[
-          {
-            text: "Cheese Sauce",
-            value: "1",
-          },
-          {
-            text: "Mozzarella",
-            value: "2",
-          },
-          {
-            text: "Garlic",
-            value: "3",
-          },
-          {
-            text: "Pickled Cucumbers",
-            value: "4",
-          },
-          {
-            text: "Red Onion",
-            value: "5",
-          },
-          {
-            text: "Tomatoes",
-            value: "6",
-          },
-        ]}
-        items={[
-          {
-            text: "Cheese Sauce",
-            value: "1",
-          },
-          {
-            text: "Mozzarella",
-            value: "2",
-          },
-          {
-            text: "Garlic",
-            value: "3",
-          },
-          {
-            text: "Pickled Cucumbers",
-            value: "4",
-          },
-          {
-            text: "Red Onion",
-            value: "5",
-          },
-          {
-            text: "Tomatoes",
-            value: "6",
-          },
-          {
-            text: "Cheese Sauce",
-            value: "1",
-          },
-          {
-            text: "Mozzarella",
-            value: "2",
-          },
-          {
-            text: "Garlic",
-            value: "3",
-          },
-          {
-            text: "Pickled Cucumbers",
-            value: "4",
-          },
-          {
-            text: "Red Onion",
-            value: "5",
-          },
-          {
-            text: "Tomatoes",
-            value: "6",
-          },
-        ]}
+        defaultItems={items.slice(0, 6)}
+        items={items}
+        loading={loading}
+        onClickCheckbox={onAddId}
+        selected={selectedIngredietns}
       />
     </div>
   );

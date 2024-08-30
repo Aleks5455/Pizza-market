@@ -8,3 +8,4 @@ export { Filters } from "./filters";
 export { FiltrationCheckbox } from "./filtrationCheckbox";
 export { DoubleSlider } from "./doubleSlider";
 export { CheckboxGroup } from "./checkboxGroup";
+export { SearchInput } from "./searchInput";

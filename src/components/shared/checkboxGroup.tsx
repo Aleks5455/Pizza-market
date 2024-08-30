@@ -1,19 +1,22 @@
 "use client";
 import React, { useState } from "react";
 import { ChecboxProps, FiltrationCheckbox } from "./filtrationCheckbox";
-import { Input } from "../ui";
+import { Input, Skeleton } from "../ui";
 
 type Item = ChecboxProps;
 
 type Props = {
   title: string;
   items: Item[];
-  defaultItems: Item[];
+  defaultItems?: Item[];
   limit?: number;
   searchPlaceholder?: string;
   className?: string;
-  onChange?: (value: string[]) => void;
+  onClickCheckbox?: (id: string) => void;
   defaultValues?: string[];
+  selected?: Set<string>;
+  loading?: boolean;
+  name?: string;
 };
 
 export const CheckboxGroup: React.FC<Props> = ({
@@ -22,8 +25,11 @@ export const CheckboxGroup: React.FC<Props> = ({
   defaultItems,
   limit = 5,
   searchPlaceholder = "Find...",
+  loading,
   className,
-  onChange,
+  onClickCheckbox,
+  selected,
+  name,
   defaultValues,
 }) => {
   const [showAll, setShowAll] = useState(false);
@@ -37,10 +43,24 @@ export const CheckboxGroup: React.FC<Props> = ({
     ? items.filter((item) =>
         item.text.toLowerCase().includes(searchValue.toLowerCase())
       )
-    : defaultItems.slice(0, limit);
+    : (defaultItems || items).slice(0, limit);
+
+  if (loading) {
+    return (
+      <div className={className}>
+        <p className="font-bold mb-3">{title}</p>
+
+        {...Array(limit)
+          .fill(0)
+          .map((_, index) => (
+            <Skeleton key={index} className="h-6 mb-4 rounded-md" />
+          ))}
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className={className}>
       <p className="font-bold mb-3">{title}</p>
 
       {showAll && (
@@ -60,8 +80,9 @@ export const CheckboxGroup: React.FC<Props> = ({
             text={item.text}
             value={item.value}
             endContent={item.endContent}
-            checked={false}
-            onChecked={() => console.log(item.value)}
+            checked={selected?.has(item.value)}
+            onChecked={() => onClickCheckbox?.(item.value)}
+            name={name}
           />
         ))}
       </div>
