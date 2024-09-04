@@ -9,3 +9,6 @@ export { FiltrationCheckbox } from "./filtrationCheckbox";
 export { DoubleSlider } from "./doubleSlider";
 export { CheckboxGroup } from "./checkboxGroup";
 export { SearchInput } from "./searchInput";
+export { ProductImage } from "./productImage";
+export { ProductVariants } from "./productVariants";
+export { ChooseModal } from "./modals/chooseModal";

@@ -1,10 +1,10 @@
 "use client"
 import React, { useEffect, useRef } from "react";
 import { Title } from "./title";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { ProductCard } from "./productCard";
 import { useIntersection } from "react-use";
-import { useCategoryStore } from "@/store/category";
+import { useCategoryStore } from "../../store/category";
 
 type Props = {
   title: string;
@@ -43,7 +43,7 @@ export const ProductsList: React.FC<Props> = ({
             id={product.id}
             name={product.name}
             imageUrl={product.imageUrl}
-            price={product.items[0].price}
+            price={product.variations[0].price}
           />
         ))}
       </div>
