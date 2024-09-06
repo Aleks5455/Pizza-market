@@ -5,7 +5,7 @@ import { Title } from "./title";
 import { Input } from "../ui";
 import { DoubleSlider } from "./doubleSlider";
 import { CheckboxGroup } from "./checkboxGroup";
-import { useFilters, useIngredients, useQueryFilters } from "../../../hooks";
+import { useFilters, useIngredients, useQueryFilters } from "../../hooks";
 
 type Props = {
   className?: string;

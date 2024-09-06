@@ -1,11 +1,12 @@
 "use client";
+
 import { cn } from "../../lib/utils";
 import { Api } from "../../services/api-client";
 import { Product } from "@prisma/client";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useClickAway, useDebounce } from "react-use";
 
 type Props = {
@@ -13,9 +14,9 @@ type Props = {
 };
 
 export const SearchInput: React.FC<Props> = ({ className }) => {
-  const [focused, setFocused] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [products, setProducts] = React.useState<Product[]>([]);
+  const [focused, setFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
   const ref = useRef(null);
 
   useClickAway(ref, () => {

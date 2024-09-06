@@ -5,7 +5,7 @@ import {
   ProductImage,
   ProductVariants,
   Title,
-} from "../../../../components/shared";
+} from "../../../../../shared/components/shared";
 
 export default async function ProductPage({
   params: { id },

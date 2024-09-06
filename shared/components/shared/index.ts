@@ -12,3 +12,6 @@ export { SearchInput } from "./searchInput";
 export { ProductImage } from "./productImage";
 export { ProductVariants } from "./productVariants";
 export { ChooseModal } from "./modals/chooseModal";
+export { ChooseProductForm } from "./chooseProductForm";
+export { ChoosePizzaForm } from "./choosePizzaForm";
+export { Ingredients } from "./ingredients";

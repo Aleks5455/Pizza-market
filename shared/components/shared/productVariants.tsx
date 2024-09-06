@@ -2,23 +2,25 @@
 
 import { cn } from "../../lib/utils";
 
-type Variants = {
+
+
+type Variant = {
   name: string;
   value: string;
   disabled?: boolean;
 };
 
 type Props = {
-  items: readonly Variants[];
+  items: readonly Variant[];
   className?: string;
-  selectedValue?: Variants["value"];
-  onClick?: (value: Variants["value"]) => void;
+  value?: Variant["value"];
+  onClick?: (value: Variant["value"]) => void;
 };
 
 export const ProductVariants: React.FC<Props> = ({
   items,
   className,
-  selectedValue,
+  value,
   onClick,
 }) => {
   return (
@@ -33,9 +35,9 @@ export const ProductVariants: React.FC<Props> = ({
           key={item.name}
           onClick={() => onClick?.(item.value)}
           className={cn(
-            "flex flex-1 items-center justify-center cursor-pointer h-[30px] rounded-xl px-5 transition-all duration-500 text-sm",
+            "flex flex-1 items-center justify-center cursor-pointer h-[39px] rounded-xl px-5 transition-all duration-500 text-sm",
             {
-                "bg-white shadow": item.value === selectedValue,
+                "bg-white shadow": item.value === value,
                 "text-gray-500 opacity-50 pointer-events-none": item.disabled
             }
           )}

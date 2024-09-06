@@ -42,7 +42,7 @@ export const categories = [
     },
     {
       name: 'Tender Chicken',
-      price: 3,
+      price: 33,
       imageUrl: 'https://cdn.dodostatic.net/static/Img/Ingredients/000D3A39D824A82E11E9AFA5B328D35A',
     },
     {
@@ -51,7 +51,7 @@ export const categories = [
       imageUrl: 'https://cdn.dodostatic.net/static/Img/Ingredients/000D3A22FA54A81411E9AFA67259A324',
     },
     {
-      name: 'Ham',
+      name: 'Hamo',
       price: 3,
       imageUrl: 'https://cdn.dodostatic.net/static/Img/Ingredients/000D3A39D824A82E11E9AFA61B9A8D61',
     },
