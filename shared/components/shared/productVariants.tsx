@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 
 
 
-type Variant = {
+export type Variant = {
   name: string;
   value: string;
   disabled?: boolean;

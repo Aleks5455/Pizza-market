@@ -33,7 +33,6 @@ export default async function ProductPage({
           <p className="text-gray-400">Lorem, ipsum.</p>
 
           <ProductVariants
-          selectedValue="2"
             items={[
               {
                 name: "Small",
