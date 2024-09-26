@@ -6,36 +6,31 @@ import { Title } from "./title";
 import { ProductVariants } from "./productVariants";
 import { Button } from "../ui";
 import { cn } from "../../lib/utils";
-import {
-  mapPizzaType,
-  PizzaSize,
-  pizzaSizes,
-  PizzaType,
-  pizzaTypes,
-} from "../../constants/pizza";
+import { PizzaSize, PizzaType, pizzaTypes } from "../../constants/pizza";
 import { Ingredient, ProductVariation } from "@prisma/client";
 import { Ingredients } from "./ingredients";
-import { usePizzaOptions } from "../../hooks/usePizzaOptions";
+import { usePizzaOptions } from "../../hooks/use-pizza-options";
 import { getPizzaDetails } from "../../lib/getPizzaDetails";
 
 type Props = {
   imageUrl: string;
   name: string;
+  loading?: boolean;
   ingredients: Ingredient[];
   variations: ProductVariation[];
   className?: string;
-  onClickAddCart?: () => void;
+  onSubmit: (itemId: number, ingredients: number[]) => void;
 };
 
 export const ChoosePizzaForm: React.FC<Props> = ({
   imageUrl,
   className,
   name,
+  loading,
   ingredients,
   variations,
-  onClickAddCart,
+  onSubmit,
 }) => {
-
   const {
     size,
     type,
@@ -44,12 +39,21 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     selectedIngredients,
     toggleIngredients,
     availablePizzaSizes,
+    currentItemId,
   } = usePizzaOptions(variations);
 
-const {totalPrice, textDetails} = getPizzaDetails(type, size, variations, ingredients, selectedIngredients);
+  const { totalPrice, textDetails } = getPizzaDetails(
+    type,
+    size,
+    variations,
+    ingredients,
+    selectedIngredients
+  );
 
   const handleClick = () => {
-    onClickAddCart?.();
+    if (currentItemId) {
+      onSubmit(currentItemId, Array.from(selectedIngredients));
+    }
   };
 
   return (
@@ -91,6 +95,7 @@ const {totalPrice, textDetails} = getPizzaDetails(type, size, variations, ingred
         </div>
 
         <Button
+          loading={loading}
           className="h-[55px] px-10 mt-10 text-base rounded-2xl w-full"
           onClick={handleClick}
         >

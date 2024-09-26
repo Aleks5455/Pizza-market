@@ -13,6 +13,7 @@ type ReturnProps = {
   selectedIngredients: Set<number>;
   toggleIngredients: (value: number) => void;
   availablePizzaSizes: Variant[];
+  currentItemId?: number;
 };
 
 export const usePizzaOptions = (
@@ -24,6 +25,8 @@ export const usePizzaOptions = (
     new Set<number>([])
   );
   const availablePizzaSizes = getAvailableSizes(type, variations);
+
+  const currentItemId = variations.find((item) => item.pizzaType === type && item.size === size)?.id;
 
   useEffect(() => {
     const availableSize = availablePizzaSizes?.find((item) => !item.disabled);
@@ -44,5 +47,6 @@ export const usePizzaOptions = (
     selectedIngredients,
     toggleIngredients,
     availablePizzaSizes,
+    currentItemId,
   };
 };

@@ -22,16 +22,16 @@ export const ProductsList: React.FC<Props> = ({
   listClassName,
 }) => {
   const intersectionRef = useRef(null);
-  const itnersection = useIntersection(intersectionRef, {
+  const intersection = useIntersection(intersectionRef, {
     threshold: 0.4,
   });
   const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
 
   useEffect(() => {
-    if (itnersection?.isIntersecting) {
+    if (intersection?.isIntersecting) {
       setActiveCategoryId(categoryId);
     }
-  }, [categoryId, title, itnersection?.isIntersecting]);
+  }, [categoryId, title, intersection?.isIntersecting]);
   return (
     <div className={className} id={title} ref={intersectionRef}>
       <Title text={title} size="lg" className="mb-5 font-extrabold" />

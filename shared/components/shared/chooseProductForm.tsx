@@ -1,27 +1,26 @@
 import { cn } from "../../lib/utils";
 import React from "react";
-import { ProductImage } from "./productImage";
 import { Title } from "./title";
-import { ProductVariants } from "./productVariants";
 import { Button } from "../ui";
 import Image from "next/image";
 
 type Props = {
   imageUrl: string;
   name: string;
+  loading?: boolean;
+  price: number;
   className?: string;
-  onClickAdd?: () => void;
+  onSubmit?: () => void;
 };
 
 export const ChooseProductForm: React.FC<Props> = ({
   imageUrl,
   className,
   name,
-  onClickAdd,
+  loading,
+  price,
+  onSubmit,
 }) => {
-  const textDetails = "pizza pizza pizza";
-  const totalPrice = 12;
-
   return (
     <div className={cn("flex flex-1", className)}>
       <div className="flex flex-1 items-center justify-center relative w-full">
@@ -36,11 +35,12 @@ export const ChooseProductForm: React.FC<Props> = ({
 
       <div className="w-[490px] bg-[#f7f6f5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
-
-        <p className="text-gray-400 mb-5">{textDetails}</p>
-
-        <Button className="h-[55px] px-10 mt-10 text-base rounded-2xl w-full">
-          Add to cart for ${totalPrice}
+        <Button
+          loading={loading}
+          onClick={onSubmit}
+          className="h-[55px] px-10 mt-10 text-base rounded-2xl w-full"
+        >
+          Add to cart for ${price}
         </Button>
       </div>
     </div>
