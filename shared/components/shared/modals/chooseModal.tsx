@@ -20,32 +20,28 @@ export const ChooseModal: React.FC<Props> = ({ className, product }) => {
   const router = useRouter();
   const firstVariation = product.variations[0];
   const isPizzaForm = Boolean(firstVariation.pizzaType);
-  const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
+  const [addCartItem, loading] = useCartStore((state) => [
+    state.addCartItem,
+    state.loading,
+  ]);
 
-  const onAddProduct = () => {
-    addCartItem({
-      productVariationId: firstVariation.id,
-    });
-  };
-  const onAddPizza = async (productVariationId: number, ingredients: number[]) => {
+  const onSubmit = async (
+    productVariationId?: number,
+    ingredients?: number[]
+  ) => {
     try {
+      const itemId = productVariationId || firstVariation.id;
+
       await addCartItem({
-        productVariationId,
+        productVariationId: itemId,
         ingredients,
       });
-      toast.success("Pizza added to cart");
+
+      toast.success(product.name + " added to cart");
       router.back();
     } catch (error) {
       console.log(error);
-      toast.error("Pizza could not be added to cart");
-    }
-  };
-
-  const onSubmit = (productVariationId?: number, ingredients?: number[]) => {
-    if (isPizzaForm) {
-      onAddPizza(firstVariation.id, []);
-    } else {
-      onAddProduct();
+      toast.error(product.name + " could not be added to cart");
     }
   };
 

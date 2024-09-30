@@ -37,7 +37,7 @@ export const ChooseProductForm: React.FC<Props> = ({
         <Title text={name} size="md" className="font-extrabold mb-1" />
         <Button
           loading={loading}
-          onClick={onSubmit}
+          onClick={() => onSubmit?.()}
           className="h-[55px] px-10 mt-10 text-base rounded-2xl w-full"
         >
           Add to cart for ${price}
