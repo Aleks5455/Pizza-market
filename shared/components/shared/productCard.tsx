@@ -4,12 +4,14 @@ import React from "react";
 import { Title } from "./title";
 import { Button } from "../ui";
 import { Plus } from "lucide-react";
+import { Ingredient } from "@prisma/client";
 
 type Props = {
   id: number;
   name: string;
   price: number;
   imageUrl: string;
+  ingredients: Ingredient[];
   className?: string;
 };
 
@@ -18,6 +20,7 @@ export const ProductCard: React.FC<Props> = ({
   name,
   price,
   imageUrl,
+  ingredients,
   className,
 }) => {
   return (
@@ -30,8 +33,7 @@ export const ProductCard: React.FC<Props> = ({
         <Title text={name} size="sm" className="mb-1 mt-3 font-bold" />
 
         <p className="text-sm text-gray-400">
-          Chicken, Mozzarella, Cheddar and Parmesan Cheeses, Cheese Sauce,
-          Tomatoes, Alfredo Sauce, Garlic.
+          {ingredients.map((ingredient) => ingredient.name).join(", ")}
         </p>
 
         <div className="flex justify-between items-center mt-4">
@@ -40,8 +42,8 @@ export const ProductCard: React.FC<Props> = ({
           </span>
 
           <Button variant="secondary" className="text-base font-bold">
-                <Plus className="w-5 h-5 mr-1"/>
-                Add
+            <Plus className="w-5 h-5 mr-1" />
+            Add
           </Button>
         </div>
       </Link>

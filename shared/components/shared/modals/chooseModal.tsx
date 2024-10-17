@@ -4,12 +4,9 @@ import { Dialog } from "../../ui";
 import { DialogContent, DialogTitle } from "../../ui/dialog";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ChooseProductForm } from "../chooseProductForm";
 import { ProductWithRelations } from "../../../../@types/prisma";
-import { ChoosePizzaForm } from "../choosePizzaForm";
 import { cn } from "../../../lib/utils";
-import { useCartStore } from "../../../store/cart";
-import toast from "react-hot-toast";
+import { ProductForm } from "../productForm";
 
 type Props = {
   product: ProductWithRelations;
@@ -19,31 +16,7 @@ type Props = {
 export const ChooseModal: React.FC<Props> = ({ className, product }) => {
   const router = useRouter();
   const firstVariation = product.variations[0];
-  const isPizzaForm = Boolean(firstVariation.pizzaType);
-  const [addCartItem, loading] = useCartStore((state) => [
-    state.addCartItem,
-    state.loading,
-  ]);
 
-  const onSubmit = async (
-    productVariationId?: number,
-    ingredients?: number[]
-  ) => {
-    try {
-      const itemId = productVariationId || firstVariation.id;
-
-      await addCartItem({
-        productVariationId: itemId,
-        ingredients,
-      });
-
-      toast.success(product.name + " added to cart");
-      router.back();
-    } catch (error) {
-      console.log(error);
-      toast.error(product.name + " could not be added to cart");
-    }
-  };
 
   return (
     <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
@@ -54,24 +27,7 @@ export const ChooseModal: React.FC<Props> = ({ className, product }) => {
           className
         )}
       >
-        {isPizzaForm ? (
-          <ChoosePizzaForm
-            imageUrl={product.imageUrl}
-            name={product.name}
-            ingredients={product.ingredients}
-            variations={product.variations}
-            onSubmit={onSubmit}
-            loading={loading}
-          />
-        ) : (
-          <ChooseProductForm
-            imageUrl={product.imageUrl}
-            name={product.name}
-            onSubmit={onSubmit}
-            price={firstVariation.price}
-            loading={loading}
-          />
-        )}
+        <ProductForm product={product} _onSubmit={() => router.back()} />
       </DialogContent>
     </Dialog>
   );

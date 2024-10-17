@@ -3,7 +3,7 @@ export const metadata = {
   description: 'So tasty anyway',
 }
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
