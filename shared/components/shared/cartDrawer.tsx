@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -15,33 +15,15 @@ import { Button } from "../ui";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CartDrawerItem } from "./cartDrawerItem";
 import { getCartItemDetails } from "../../lib/getCartItemDetails";
-import { useCartStore } from "../../store/cart";
 import { PizzaSize, PizzaType } from "../../constants/pizza";
 import Image from "next/image";
 import { Title } from "./title";
 import { cn } from "../../lib/utils";
+import { useCart } from "../../hooks";
 
-type Props = {
-  className?: string;
-};
-
-export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
-  children,
-  className,
-}) => {
-  const [
-    totalAmount,
-    items,
-    fetchCartItems,
-    updateItemQuantity,
-    removeCartItem,
-  ] = useCartStore((state) => [
-    state.totalAmount,
-    state.items,
-    state.fetchCartItems,
-    state.updateItemQuantity,
-    state.removeCartItem,
-  ]);
+export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart();
+  const [redirecting, setRedirecting] = useState(false);
 
   const onClickCountButton = (
     id: number,
@@ -49,17 +31,19 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
     type: "plus" | "minus"
   ) => {
     const newQuantity = type === "plus" ? quantity + 1 : quantity - 1;
+    updateItemQuantity(id, newQuantity);
   };
-
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="flex flex-col justify-between pb-0 bg-[#F4F1EE]">
-        <div className={cn("flex flex-col h-full", !totalAmount && "justify-center")}>
+        <div
+          className={cn(
+            "flex flex-col h-full",
+            !totalAmount && "justify-center"
+          )}
+        >
           {totalAmount > 0 && (
             <SheetHeader>
               <SheetTitle>
@@ -102,15 +86,11 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
                     <CartDrawerItem
                       id={item.id}
                       imageUrl={item.imageUrl}
-                      details={
-                        item.pizzaSize && item.pizzaType
-                          ? getCartItemDetails(
-                              item.ingredients,
-                              item.pizzaType as PizzaType,
-                              item.pizzaSize as PizzaSize
-                            )
-                          : ""
-                      }
+                      details={getCartItemDetails(
+                        item.ingredients,
+                        item.pizzaType as PizzaType,
+                        item.pizzaSize as PizzaSize
+                      )}
                       disabled={item.disabled}
                       name={item.name}
                       price={item.price}
@@ -135,8 +115,13 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
                     <span className="font-bold text-lg">$ {totalAmount}</span>
                   </div>
 
-                  <Link href="/cart">
-                    <Button type="submit" className="w-full h-12 text-base">
+                  <Link href="/checkout">
+                    <Button
+                      onClick={() => setRedirecting(true)}
+                      loading={redirecting}
+                      type="submit"
+                      className="w-full h-12 text-base"
+                    >
                       Place Order
                       <ArrowRight className="w-5 ml-2" />
                     </Button>
