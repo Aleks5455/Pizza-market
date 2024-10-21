@@ -2,7 +2,7 @@
 
 import { CheckoutSidebar, Container, Title } from "../../../../shared/components/shared";
 import { useCart } from "../../../../shared/hooks";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckoutCart } from "../../../../shared/components/shared/checkout/checkoutCart";
 import { CheckoutDataInputs } from "../../../../shared/components/shared/checkout/checkoutDataInputs";
@@ -27,9 +27,9 @@ export default function CheckoutPage() {
     },
   });
 
-  const onSubmit = (data: CheckoutFormType) => {
-    
-  }
+  const onSubmit: SubmitHandler<CheckoutFormType> = (data) => {
+    console.log(data);
+  };
   const onClickCountButton = (id: number, quantity: number, type: "plus" | "minus") => {
     const newQuantity = type === "plus" ? quantity + 1 : quantity - 1;
     updateItemQuantity(id, newQuantity);
@@ -40,7 +40,7 @@ export default function CheckoutPage() {
       <Title text="Checkout" className="font-extrabold text-[36px] mb-8" />
 
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit()}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-10">
             <div className="flex flex-col gap-10 flex-1 mb-20">
               <CheckoutCart items={items} onClickCountButton={onClickCountButton} removeCartItem={removeCartItem} />
