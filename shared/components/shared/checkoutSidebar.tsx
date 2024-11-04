@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../ui";
+import { Button, Skeleton } from "../ui";
 import { ArrowRight, Package, Percent, Truck } from "lucide-react";
 import { WhiteBlock } from "./whiteBlock";
 import { CheckoutDetails } from "./checkoutDetails";
@@ -8,12 +8,13 @@ import { cn } from "../../lib/utils";
 type Props = {
   totalAmount: number;
   className?: string;
+  loading?: boolean;
 };
 
 const TAX = 5;
 const DELIVERY_PRICE = 15;
 
-export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount }) => {
+export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount, loading }) => {
   const taxPrice = totalAmount * (TAX / 100);
   const totalPrice = totalAmount + taxPrice + DELIVERY_PRICE;
 
@@ -21,7 +22,11 @@ export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount }) => 
     <WhiteBlock className={cn("p-6 sticky top-4", className)}>
       <div className="flex flex-col gap-1">
         <span className="text-xl">Total:</span>
-        <span className="text-4xl font-extrabold">$ {totalPrice}</span>
+        {loading ? (
+          <Skeleton className="w-48 h-11" />
+        ) : (
+          <span className=" h-11 text-4xl font-extrabold">$ {totalPrice}</span>
+        )}
       </div>
 
       <CheckoutDetails
@@ -31,7 +36,7 @@ export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount }) => 
             Products price
           </div>
         }
-        value={` ${totalAmount}`}
+        value={loading ? <Skeleton className="w-16 rounded-[6px] h-6" /> : `$ ${totalAmount}`}
       />
 
       <CheckoutDetails
@@ -41,7 +46,7 @@ export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount }) => 
             Tax
           </div>
         }
-        value={` ${taxPrice}`}
+        value={loading ? <Skeleton className="w-16 rounded-[6px] h-6" /> : `$ ${taxPrice}`}
       />
 
       <CheckoutDetails
@@ -51,10 +56,10 @@ export const CheckoutSidebar: React.FC<Props> = ({ className, totalAmount }) => 
             Delivery Price
           </div>
         }
-        value={` ${DELIVERY_PRICE}`}
+        value={loading ? <Skeleton className="w-16 rounded-[6px] h-6" /> : `$ ${DELIVERY_PRICE}`}
       />
 
-      <Button type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
+      <Button loading={loading} type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
         Continue to Payment
         <ArrowRight className="w-5 ml-2" />
       </Button>

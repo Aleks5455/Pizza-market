@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import Link from "next/link";
 import { Button } from "../ui";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -25,11 +17,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart();
   const [redirecting, setRedirecting] = useState(false);
 
-  const onClickCountButton = (
-    id: number,
-    quantity: number,
-    type: "plus" | "minus"
-  ) => {
+  const onClickCountButton = (id: number, quantity: number, type: "plus" | "minus") => {
     const newQuantity = type === "plus" ? quantity + 1 : quantity - 1;
     updateItemQuantity(id, newQuantity);
   };
@@ -38,12 +26,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="flex flex-col justify-between pb-0 bg-[#F4F1EE]">
-        <div
-          className={cn(
-            "flex flex-col h-full",
-            !totalAmount && "justify-center"
-          )}
-        >
+        <div className={cn("flex flex-col h-full", !totalAmount && "justify-center")}>
           {totalAmount > 0 && (
             <SheetHeader>
               <SheetTitle>
@@ -54,20 +37,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
 
           {!totalAmount && (
             <div className="flex flex-col items-center justify-center w-72 mx-auto">
-              <Image
-                src="/assets/empty-cart.png"
-                width={120}
-                height={120}
-                alt="empty"
-              />
-              <Title
-                text="Your cart is empty"
-                size="sm"
-                className="text-center font-bold my-2"
-              />
-              <p className="text-center text-neutral-500 mb-5">
-                Add something to your cart to get started
-              </p>
+              <Image src="/assets/empty-cart.png" width={120} height={120} alt="empty" />
+              <Title text="Your cart is empty" size="sm" className="text-center font-bold my-2" />
+              <p className="text-center text-neutral-500 mb-5">Add something to your cart to get started</p>
 
               <SheetClose>
                 <Button className="w-56 h-12 text-base" size="lg">
@@ -95,9 +67,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                       name={item.name}
                       price={item.price}
                       quantity={item.quantity}
-                      onClickCountButton={(type) =>
-                        onClickCountButton(item.id, item.quantity, type)
-                      }
+                      onClickCountButton={(type) => onClickCountButton(item.id, item.quantity, type)}
                       onClickRemoveButton={() => removeCartItem(item.id)}
                     />
                   </div>
