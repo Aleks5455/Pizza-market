@@ -6,6 +6,7 @@ import { CheckoutFormType } from "../../shared/components/shared/checkout/checko
 import { cookies } from "next/headers";
 import { sendEmail } from "../../shared/lib/sendEmail";
 import { PayOrderTemplate } from "../../shared/components/shared/email-templates/payOrder";
+import { createPayment } from "../../shared/lib/createPayment";
 
 export async function createOrder(data: CheckoutFormType) {
   try {
@@ -77,6 +78,39 @@ export async function createOrder(data: CheckoutFormType) {
       "Pizza / Pay for order #" + order.id,
       PayOrderTemplate({ orderId: order.id, totalAmount: order.totalAmount, paymentUrl: "https://google.com" })
     );
+
+    const paymentData = await createPayment({
+      orderId: order.id,
+      amount: order.totalAmount,
+      description: "Pay for order #" + order.id,
+    });
+
+    if (!paymentData) {
+      throw new Error("Payment data not found");
+    }
+
+    await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+      data: {
+        paymentId: paymentData.id,
+      },
+    });
+
+    const paymentUrl = paymentData.confirmation.confirmation_url;
+
+    await sendEmail(
+      data.email,
+      "Pizza / Payment for order #" + order.id,
+      PayOrderTemplate({
+        orderId: order.id,
+        totalAmount: order.totalAmount,
+        paymentUrl,
+      })
+    );
+
+    return paymentUrl;
   } catch (error) {
     console.error("Error while creating order", error);
   }
