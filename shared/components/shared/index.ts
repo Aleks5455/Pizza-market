@@ -26,3 +26,4 @@ export { CheckoutSidebar } from "./checkoutSidebar";
 export { ReqStar } from "./reqStar";
 export { ErrorText } from "./errorText";
 export { ClearButton } from "./clearButton";
+export { ProfileButton } from "./profileButton";
